@@ -1,6 +1,6 @@
 # mf-lang #
 
-**mf-lang** is a custom, interpreted programming language build from scratch in Python. Icatered it towards **Network Engineering and Telemetry**, allowing users to perform low-latency testing, IP monitoring, and basic logic through a simplified syntax.
+mf-lang is a custom, interpreted programming language built from scratch in Python. I catered it towards 'Network Engineering and Telemetry', allowing users to perform low-latency testing, IP monitoring, and basic logic through a simplified syntax.
 ---
 
 ## Quick Start ##
@@ -40,7 +40,9 @@ Gives an output of `ms = 39.629 ms`
 // This is a single-line comment
 ping "google.com"
 ```
-Gives an output of `--- mf-lang: Pinging google.com ---
+Gives an output of,
+```
+--- mf-lang: Pinging google.com ---
 
 Pinging google.com [2607:f8b0:4005:80f::200e] with 32 bytes of data:
 Reply from 2607:f8b0:4005:80f::200e: time=62ms 
@@ -49,6 +51,7 @@ Ping statistics for 2607:f8b0:4005:80f::200e:
     Packets: Sent = 1, Received = 1, Lost = 0 (0% loss),
 Approximate round-trip times in milliseconds:
     Minimum = 62ms, Maximum = 62ms, Average = 62ms`
+```
 ---
 
 ## Architecture ##
