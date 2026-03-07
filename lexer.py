@@ -4,18 +4,29 @@ class TokenType(Enum):
     # make sure to start with defining new TokenType when creating a new statement
     NUMBER = "NUMBER"
     FLOAT = "FLOAT"
+    BOOL = "BOOL"
+    NULL = "NULL"
     STRING = "STRING"
     PLUS = "PLUS"
     MINUS = "MINUS"
     MULTIPLY = "MULTIPLY"
     DIVIDE = "DIVIDE"
+    LT = "LT"
+    GT = "GT"
+    LTE = "LTE"
+    GTE = "GTE"
     LPAREN = "LPAREN"
     RPAREN = "RPAREN"
+    LBRACE = "LBRACE"
+    RBRACE = "RBRACE"
+    SEMICOLON = "SEMICOLON"
     EOF = "EOF" # end of file, tells the parser to stop
     ID = "ID"
     ASSIGN = "ASSIGN" # =
     EQUALS= "EQUALS"  # ==
     NOT_EQ = "NOT_EQ" # !=
+    AND = "AND"
+    OR = "OR"
     PRINT = "PRINT"
     HELP = "HELP"
     CLEAR = "CLEAR"
@@ -23,6 +34,17 @@ class TokenType(Enum):
     EXIT = "EXIT"
     PING = "PING"
     LATENCY = "LATENCY"
+    IF = "IF"
+    ELSE = "ELSE"
+    WHILE = "WHILE"
+    BREAK = "BREAK"
+    CONTINUE = "CONTINUE"
+    RESOLVE = "RESOLVE"
+    FOR = "FOR"
+    DO = "DO"
+    NOT = "NOT"
+    SLEEP = "SLEEP"
+    SLEEP_MS = "SLEEP_MS"
 
 class Token:
     def __init__(self, type, value=None):
@@ -130,6 +152,22 @@ class Lexer:
                     return Token(TokenType.NOT_EQ, '!=')
                 raise Exception("Expected '=' after '!'")
 
+            if self.current_char == '<':
+                if self.peek() == '=':
+                    self.advance()
+                    self.advance()
+                    return Token(TokenType.LTE, '<=')
+                self.advance()
+                return Token(TokenType.LT, '<')
+
+            if self.current_char == '>':
+                if self.peek() == '=':
+                    self.advance()
+                    self.advance()
+                    return Token(TokenType.GTE, '>=')
+                self.advance()
+                return Token(TokenType.GT, '>')
+
             if self.current_char == '+':
                 self.advance()
                 return Token(TokenType.PLUS)
@@ -159,6 +197,18 @@ class Lexer:
                 self.advance()
                 return Token(TokenType.RPAREN)
 
+            if self.current_char == '{':
+                self.advance()
+                return Token(TokenType.LBRACE)
+
+            if self.current_char == '}':
+                self.advance()
+                return Token(TokenType.RBRACE)
+
+            if self.current_char == ';':
+                self.advance()
+                return Token(TokenType.SEMICOLON)
+
             # Raise an error if we find a character we don't recognize
             raise Exception(f"Invalid character: {self.current_char}")
         return Token(TokenType.EOF)
@@ -179,10 +229,30 @@ class Lexer:
             "exit":  TokenType.EXIT,
             "ping": TokenType.PING,
             "latency": TokenType.LATENCY,
+            "if": TokenType.IF,
+            "else": TokenType.ELSE,
+            "while": TokenType.WHILE,
+            "break": TokenType.BREAK,
+            "continue": TokenType.CONTINUE,
+            "and": TokenType.AND,
+            "or": TokenType.OR,
+            "resolve": TokenType.RESOLVE,
+            "for": TokenType.FOR,
+            "do": TokenType.DO,
+            "not": TokenType.NOT,
+            "sleep": TokenType.SLEEP,
+            "sleep_ms": TokenType.SLEEP_MS,
         }
 
         # if it's in the keyword dictionary, return that type; otherwise it's an ID
         token_type = keywords.get(result.lower(), TokenType.ID)
+        lowered = result.lower()
+        if lowered == "true":
+            return Token(TokenType.BOOL, True)
+        if lowered == "false":
+            return Token(TokenType.BOOL, False)
+        if lowered == "null":
+            return Token(TokenType.NULL, None)
         return Token(token_type, result)
 
 
